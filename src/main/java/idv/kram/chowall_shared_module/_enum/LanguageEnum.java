@@ -1,4 +1,4 @@
-package _enum;
+package idv.kram.chowall_shared_module._enum;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

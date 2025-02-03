@@ -1,4 +1,4 @@
-package chatgpt;
+package idv.kram.chowall_shared_module.chatgpt;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;

@@ -1,4 +1,4 @@
-package chatgpt;
+package idv.kram.chowall_shared_module.chatgpt;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
