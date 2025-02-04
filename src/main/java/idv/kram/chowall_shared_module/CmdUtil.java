@@ -6,9 +6,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class CmdUtil {
+
+    // 使用 ConcurrentHashMap 儲存執行緒ID與 Process 的對應關係
+    private static final Map<Long, Process> threadProcessMap = new ConcurrentHashMap<>();
+
     public static String exec(String cmd) {
         return exec(cmd.split(" "));
     }
@@ -16,6 +22,8 @@ public class CmdUtil {
     public static String exec(String... cmd) {
         try {
             Process p = new ProcessBuilder(cmd).start();
+            // 以當前執行緒 ID 作為 key 儲存對應的 process
+            threadProcessMap.put(Thread.currentThread().getId(), p);
             p.info().command().ifPresent(log::info);
             StringBuilder stdout = new StringBuilder();
             StringBuilder stderr = new StringBuilder();
@@ -58,6 +66,18 @@ public class CmdUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    // 根據傳入的執行緒ID關閉對應的 Process
+    public static void stopProcessByThreadId(long threadId) {
+        Process process = threadProcessMap.get(threadId);
+        if (process != null && process.isAlive()) {
+            log.info("Stopping process for thread id: {}", threadId);
+            process.destroy(); // 或使用 process.destroyForcibly() 強制關閉
+            threadProcessMap.remove(threadId);
+        } else {
+            log.info("No active process found for thread id: {}", threadId);
+        }
     }
 
 }
