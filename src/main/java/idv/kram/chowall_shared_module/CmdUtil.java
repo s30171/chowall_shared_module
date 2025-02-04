@@ -80,4 +80,13 @@ public class CmdUtil {
         }
     }
 
+    public static void stopAllProcess() {
+        threadProcessMap.forEach((threadId, process) -> {
+            if (process.isAlive()) {
+                log.info("Stopping process for thread id: {}", threadId);
+                process.destroy();
+            }
+        });
+        threadProcessMap.clear();
+    }
 }
